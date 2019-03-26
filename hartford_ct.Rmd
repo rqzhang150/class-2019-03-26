@@ -12,7 +12,6 @@ library(tidyverse)
 library(maps)
 library(ggmap)
 library(fs)
-library(mapproj)
 ```
 
 ```{r data_proc, echo=FALSE, cache=TRUE}
@@ -22,7 +21,13 @@ download.file(url = "https://stacks.stanford.edu/file/druid:tr137st9964/tr137st9
 
 hartford <- read_rds("ct_hartford.rds")
 
+#Then, we delete the file so it doesn't interfere with further processes
 file_delete("ct_hartford.rds")
 ```
 
+```{r}
+hartford %>% select(district, reason_for_stop) %>% group_by(reason_for_stop) %>% summarize(total = n()) %>% ggplot(aes(x = reason_for_stop, y = total)) + geom_col() +
+  #facet_wrap(~district) 
+  coord_flip()
+```
 
