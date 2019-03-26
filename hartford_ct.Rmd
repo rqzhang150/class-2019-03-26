@@ -1,0 +1,21 @@
+---
+title: "Hartford CT"
+author: "Ruoqi Zhang"
+date: "3/26/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(socviz)
+library(tidyverse)
+library(maps)
+library(ggmap)
+library(mapproj)
+```
+
+```{r data_proc, echo=FALSE}
+hartford <- read_csv("ct_hartford_2019_02_25.csv")
+```
+
+
