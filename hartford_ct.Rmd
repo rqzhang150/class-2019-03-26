@@ -11,11 +11,18 @@ library(socviz)
 library(tidyverse)
 library(maps)
 library(ggmap)
+library(fs)
 library(mapproj)
 ```
 
-```{r data_proc, echo=FALSE}
-hartford <- read_csv("ct_hartford_2019_02_25.csv")
+```{r data_proc, echo=FALSE, cache=TRUE}
+download.file(url = "https://stacks.stanford.edu/file/druid:tr137st9964/tr137st9964_ct_hartford_2019_02_25.rds",
+              destfile = "ct_hartford.rds",
+              mode = "wb")
+
+hartford <- read_rds("ct_hartford.rds")
+
+file_delete("ct_hartford.rds")
 ```
 
 
