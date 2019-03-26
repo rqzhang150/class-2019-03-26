@@ -6,12 +6,13 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 library(socviz)
 library(tidyverse)
 library(maps)
 library(ggmap)
 library(fs)
+library(gt)
 ```
 
 ```{r data_proc, echo=FALSE, cache=TRUE}
@@ -25,9 +26,42 @@ hartford <- read_rds("ct_hartford.rds")
 file_delete("ct_hartford.rds")
 ```
 
-```{r}
+```{r, echo=FALSE}
 hartford %>% select(district, reason_for_stop) %>% group_by(reason_for_stop) %>% summarize(total = n()) %>% ggplot(aes(x = reason_for_stop, y = total)) + geom_col() +
   #facet_wrap(~district) 
   coord_flip()
+```
+
+```{r, echo=FALSE}
+hartford %>% select(district, subject_race) %>% group_by(subject_race) %>% summarize(total = n()) %>% ggplot(aes(x = subject_race, y = total)) + geom_col() +
+  #facet_wrap(~district) 
+  coord_flip()
+
+```
+
+```{r, echo=FALSE}
+hartford %>% 
+  filter(arrest_made == TRUE) %>% 
+  select(district, subject_race) %>% 
+  count(district, subject_race) %>% 
+  filter(!is.na(district)) %>% 
+  spread(key = subject_race, value = n, fill = 0) %>% 
+  mutate(total = `asian/pacific islander` + `black` + `hispanic` + `white`) %>% 
+  arrange(desc(total)) %>% 
+  gt() %>% 
+  tab_header(
+    title = "Number of Arrests Made in Hartford by Race"
+  ) %>% 
+  cols_label(
+    district = "District",
+    black = "Black",
+    hispanic = "Hispanic",
+    white = "White",
+    `asian/pacific islander` = "Asian/Pacific Islanders"
+  ) %>% 
+  tab_source_note(
+    source_note = "Source: The Stanford Open Policing Project"
+  )
+  
 ```
 
